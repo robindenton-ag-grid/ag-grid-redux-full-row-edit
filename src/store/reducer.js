@@ -1,8 +1,7 @@
 import * as actionTypes from './actionTypes';
 
 const initialState = {
-    rowData: null,
-    editedRowData: null
+    rowData: null
 }
 
 const reducer = (prevState = initialState, action) => {
@@ -12,8 +11,7 @@ const reducer = (prevState = initialState, action) => {
         case actionTypes.INIT_ROW_DATA:
             return {
                 ...prevState,
-                rowData: action.rowData,
-                editedRowData: action.rowData
+                rowData: action.rowData
             };
         default: return prevState;
     }
@@ -23,7 +21,7 @@ function saveEdit(prevState, action) {
     const { id, data } = action.payload;
 
     // clone the edit data array from state
-    const dataArr = prevState.editedRowData.slice(0);
+    const dataArr = prevState.rowData.slice(0);
 
     // get index of row we are editing
     const index = dataArr.findIndex(el => {
@@ -37,11 +35,10 @@ function saveEdit(prevState, action) {
         }
     });
 
-    console.log('editedRowData index: ', index, ' updated');
+    console.log('Edited rowData index: ', index, ' updated');
 
     return {
-        rowData: prevState.rowData,
-        editedRowData: dataArr
+        rowData: dataArr
     };
 }
 

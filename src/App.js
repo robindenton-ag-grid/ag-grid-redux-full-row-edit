@@ -51,9 +51,13 @@ class App extends Component {
 
     // Perform a Redux action with the edited data
     this.props.onRowEdit(rowId, editData);
+
+    // Refresh Grid cells so they pick up new edited data from store
+    this.gridApi.refreshCells();
   }
 
   componentDidMount() {
+    console.log('mounting');
     fetch('https://raw.githubusercontent.com/ag-grid/ag-grid/master/packages/ag-grid-docs/src/olympicWinnersSmall.json')
       .then(res => res.json())
       .then(data => {
