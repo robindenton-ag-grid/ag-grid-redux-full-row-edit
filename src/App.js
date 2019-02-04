@@ -46,7 +46,6 @@ class App extends Component {
         }
       });
       console.log('EDIT PERFORMED: ', rowId, editData);
-      console.log(rowId, editData);
 
       // Cancel the edit data going to grid
       this.gridApi.stopEditing(true);
