@@ -15,11 +15,11 @@ export default class SaveEditor extends React.Component {
 
     // Instance value approach
     onSave = () => {
-        this.props.onSaveEdit(this.props, this.props.node.data.id);
+        this.props.onSaveEdit(this.props.node.data.id);
     }
 
     onCancel = () => {
-        this.props.onCancelEdit(this.props);
+        this.props.onCancelEdit();
     }
 
     handleChange = (event) => {

@@ -20,10 +20,8 @@ class App extends Component {
         width: 150,
         editable: true,
         cellEditorParams: {
-          onSaveEdit: this.onSaveEdit.bind(this),
-          onCancelEdit: (componentProps) => {
-            componentProps.api.stopEditing(true);
-          }
+          onSaveEdit: this.onEditComplete.bind(this, false),
+          onCancelEdit: this.onEditComplete.bind(this, true)
         }
       };
       this.frameworkComponents = {
@@ -32,28 +30,33 @@ class App extends Component {
       this.editType = 'fullRow';
   }
 
-  onSaveEdit(componentProps, rowId) {
-    const instances = componentProps.api.getCellEditorInstances();
-    const editData = {};
-    instances.forEach(i => {
-      if(i.params) {
-        // Default ag-Grid Editors
-        editData[i.params.column.colDef.field] = i.getValue();
-      } else {
-        // Custom React Cell Editors
-        editData[i.componentInstance.props.column.colDef.field] = i.getValue();
-      }
-    });
-    console.log('EDIT PERFORMED: ', rowId, editData);
+  onEditComplete(isCancel, rowId) {
+    if(isCancel) {
+      this.gridApi.stopEditing(true);
+    } else {
+      const instances = this.gridApi.getCellEditorInstances();
+      const editData = {};
+      instances.forEach(i => {
+        if(i.params) {
+          // Default ag-Grid Editors
+          editData[i.params.column.colDef.field] = i.getValue();
+        } else {
+          // Custom React Cell Editors
+          editData[i.componentInstance.props.column.colDef.field] = i.getValue();
+        }
+      });
+      console.log('EDIT PERFORMED: ', rowId, editData);
+      console.log(rowId, editData);
 
-    // Cancel the edit data going to grid
-    componentProps.api.stopEditing(true);
-
-    // Perform a Redux action with the edited data
-    this.props.onRowEdit(rowId, editData);
-
-    // Refresh Grid cells so they pick up new edited data from store
-    this.gridApi.refreshCells();
+      // Cancel the edit data going to grid
+      this.gridApi.stopEditing(true);
+  
+      // Perform a Redux action with the edited data
+      this.props.onRowEdit(rowId, editData);
+  
+      // Refresh Grid cells so they pick up new edited data from store
+      this.gridApi.refreshCells();
+    }
   }
 
   componentDidMount() {
